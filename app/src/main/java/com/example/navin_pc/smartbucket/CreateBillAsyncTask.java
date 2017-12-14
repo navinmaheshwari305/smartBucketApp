@@ -1,9 +1,15 @@
 package com.example.navin_pc.smartbucket;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
@@ -23,17 +29,19 @@ import java.net.URL;
  * Created by NAVIN-PC on 12/13/2017.
  */
 
-class CreateBillAsyncTask extends AsyncTask<Void, Void, String> {
+class CreateBillAsyncTask extends AsyncTask<Void, Void, Bill> {
     private Bill bill;
-    CreateBillAsyncTask(Bill bill_){
+    Activity activity;
+    CreateBillAsyncTask(Bill bill_ , Activity activity){
         this.bill = bill_;
+        this.activity = activity;
     }
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
     }
 
-    protected String doInBackground(Void... params) {
+    protected Bill doInBackground(Void... params) {
         Log.d("","Thread Running");
         JSONObject jsonBody;
         String requestBody;
@@ -41,8 +49,16 @@ class CreateBillAsyncTask extends AsyncTask<Void, Void, String> {
         try {
             Gson gson = new Gson();
             requestBody = gson.toJson(bill);
+            Log.d("NAVIN :JSON is:", requestBody);
 
-            URL url = new URL("http://192.168.43.24:8080/bill");
+            if(bill.getUserId().isEmpty()){
+
+                JsonObject jsonObject =  new JsonParser().parse(requestBody).getAsJsonObject();
+                jsonObject.remove("userId");
+                requestBody = jsonObject.toString();
+            }
+            Log.d("NAVIN :JSON is:", requestBody);
+            URL url = new URL(HomeActivity.serverUrl + "bill");
             urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setDoInput(true);
@@ -78,6 +94,7 @@ class CreateBillAsyncTask extends AsyncTask<Void, Void, String> {
             while ((temp = bufferedReader.readLine()) != null) {
                 response += temp;
             }
+            return  gson.fromJson(response , Bill.class);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -89,12 +106,15 @@ class CreateBillAsyncTask extends AsyncTask<Void, Void, String> {
                 urlConnection.disconnect();
             }
         }
-        return "Item Added";
+        return new Bill();
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(Bill result) {
         super.onPostExecute(result);
+        EditText userId;
+        userId = (EditText) activity.findViewById(R.id.userIdText);
+        userId.setText(result.getUserId());
     }
 
 }

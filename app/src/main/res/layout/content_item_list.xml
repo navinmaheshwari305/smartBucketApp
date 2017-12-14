@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.navin_pc.smartbucket.ItemList"
+    tools:context="com.example.navin_pc.smartbucket.ItemListActivity"
     tools:showIn="@layout/activity_item_list">
 
     <Button
@@ -46,23 +46,24 @@
         android:layout_marginTop="64dp"
         android:editable="false"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Bill No. will be shown here."
+        android:hint="Bill No. will be shown here."
+        android:inputType="none"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/infoTextItemList"
         android:layout_width="365dp"
-        android:layout_height="29dp"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:text="Info Text"
+        android:text="Total Amount : Rs. 0.0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createBillButton" />
 
     <ScrollView
-        android:layout_width="368dp"
-        android:layout_height="336dp"
+        android:layout_width="348dp"
+        android:layout_height="315dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"

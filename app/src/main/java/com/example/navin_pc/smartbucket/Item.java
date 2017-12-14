@@ -9,7 +9,7 @@ public class Item {
     String name;
     float rate;
     float weight;
-    int quantity;
+    int quantity=0;
 
     public Item() {
     }

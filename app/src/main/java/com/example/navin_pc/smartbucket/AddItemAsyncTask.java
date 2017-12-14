@@ -42,8 +42,7 @@ class AddItemAsyncTask extends AsyncTask<Void, Void, Item> {
     }
 
     protected Item doInBackground(Void... params) {
-        //item.setName("ho gya");
-        //return item;
+
         Log.d("","Thread Running");
         JSONObject jsonBody;
         String requestBody;
@@ -52,7 +51,7 @@ class AddItemAsyncTask extends AsyncTask<Void, Void, Item> {
             Gson gson = new Gson();
             requestBody = gson.toJson(item);
 
-            URL url = new URL("http://192.168.43.24:8080/item");
+            URL url = new URL(HomeActivity.serverUrl + "item");
             urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setDoInput(true);
@@ -108,7 +107,9 @@ class AddItemAsyncTask extends AsyncTask<Void, Void, Item> {
     protected void onPostExecute(Item item) {
         super.onPostExecute(item);
         TextView infoText = (TextView) activity.findViewById(R.id.infoText);
-        infoText.setText("Item set is : "+ item.toString());
+        Toast.makeText(activity, "Item Inserted :" + item.getBarcode(), Toast.LENGTH_LONG).show();
+        infoText.setText("Item set is : " + item.toString());
+
     }
 
 }

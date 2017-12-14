@@ -1,32 +1,25 @@
 package com.example.navin_pc.smartbucket;
 
-import android.icu.util.Output;
-import android.media.midi.MidiOutputPort;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-public class addItem extends AppCompatActivity {
+public class AddItemActivity extends AppCompatActivity {
     TextView infoText;
     EditText barcodeText , nameText , rateText , weightText;
     Button submitBtn , scanBtn;
+
+    static final String SCAN = "com.google.zxing.client.android";
+    //qr code scanner object
+    private IntentIntegrator qrScan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +43,35 @@ public class addItem extends AppCompatActivity {
                 it.setName(nameText.getText().toString());
                 it.setRate(Float.parseFloat(rateText.getText().toString()));
                 it.setWeight(Float.parseFloat(weightText.getText().toString()));
-                new AddItemAsyncTask(it,addItem.this).execute();
+                new AddItemAsyncTask(it,AddItemActivity.this).execute();
+            }
+        });
+
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //intializing scan object
+                qrScan = new IntentIntegrator(AddItemActivity.this);
+                qrScan.initiateScan();
             }
         });
     }
 
-    public void submit(View v){
-
+    //Getting the scan results
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                infoText.setText(result.getContents());
+                barcodeText.setText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }

@@ -11,6 +11,7 @@ public class Bill {
     private int itemCount;
     private List<Item> itemList;
     private float total;
+    private float totalWeight;
     private String phone;
 
     public Bill() {
@@ -54,6 +55,18 @@ public class Bill {
 
     public String getUserId() {
         return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public float getTotalWeight() {
+        return totalWeight;
+    }
+
+    public void setTotalWeight(float totalWeight) {
+        this.totalWeight = totalWeight;
     }
 
     public String toString() {
